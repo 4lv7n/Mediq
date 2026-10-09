@@ -53,6 +53,64 @@ div.stButton>button[kind="primary"]{background:#12304A;color:white;border:1px so
 div.stButton>button[kind="primary"]:hover{background:#0B5964;color:white}
 div[data-testid="stForm"]{background:white;border:1px solid #E0E7EF;border-radius:20px;padding:20px 22px}
 @media(max-width:700px){.card{padding:17px;border-radius:17px}.result{padding:20px}}
+
+/* --- MEDIQ readability refinement --- */
+:root {
+  color-scheme: light;
+}
+.stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+  background-color: #F3F6FB !important;
+}
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] label,
+.stTextInput label, .stNumberInput label, .stSelectbox label,
+.stRadio label, .stCheckbox label, [data-testid="stCaptionContainer"] {
+  color: #243B53 !important;
+}
+div[data-baseweb="input"] > div,
+div[data-baseweb="select"] > div,
+div[data-baseweb="textarea"] > div {
+  background: #FFFFFF !important;
+  border: 1px solid #D6E0E9 !important;
+  border-radius: 11px !important;
+  color: #172B4D !important;
+  box-shadow: none !important;
+}
+div[data-baseweb="input"] input,
+div[data-baseweb="textarea"] textarea,
+div[data-baseweb="select"] input {
+  background: #FFFFFF !important;
+  color: #172B4D !important;
+  -webkit-text-fill-color: #172B4D !important;
+}
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] div[role="button"] {
+  color: #172B4D !important;
+}
+div[data-baseweb="input"] > div:focus-within,
+div[data-baseweb="select"] > div:focus-within,
+div[data-baseweb="textarea"] > div:focus-within {
+  border-color: #16A6A1 !important;
+  box-shadow: 0 0 0 2px rgba(22,166,161,.15) !important;
+}
+[data-testid="stNumberInput"] button {
+  background: #F7FAFC !important;
+  color: #243B53 !important;
+  border-color: #D6E0E9 !important;
+}
+[data-testid="stForm"] {
+  background: #FFFFFF !important;
+}
+[data-testid="stDataFrame"], [data-testid="stTable"] {
+  background: #FFFFFF !important;
+}
+[data-testid="stAlert"] {
+  border-radius: 13px !important;
+}
+[data-testid="stMarkdownContainer"] p {
+  line-height: 1.65;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -168,12 +226,12 @@ elif page == "Patient Analysis":
         left,right=st.columns([1.1,1])
         with left:
             st.markdown('<div class="card"><div class="section-title">Probability distribution</div><div class="section-sub">Model outputs for the seven supported classes.</div>',unsafe_allow_html=True)
-            st.bar_chart(probs.set_index("Disease"),horizontal=True,height=300)
+            st.bar_chart(probs.set_index("Disease"), horizontal=True, height=300, color="#16A6A1")
             st.markdown('<div class="section-sub">These values are not necessarily calibrated clinical probabilities.</div></div>',unsafe_allow_html=True)
         with right:
             st.markdown('<div class="card"><div class="section-title">Top contributing factors</div><div class="section-sub">SHAP contributions for the predicted class.</div>',unsafe_allow_html=True)
             top=shap_df.head(5).sort_values("SHAP contribution")
-            fig,ax=plt.subplots(figsize=(6,3.5)); ax.barh(top["Feature"],top["SHAP contribution"]); ax.axvline(0,linewidth=.8); ax.set_xlabel("SHAP contribution"); ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False); fig.tight_layout()
+            fig,ax=plt.subplots(figsize=(6,3.5), facecolor="white"); ax.set_facecolor("white"); ax.barh(top["Feature"],top["SHAP contribution"],color="#16A6A1"); ax.axvline(0,linewidth=.8,color="#718096"); ax.set_xlabel("SHAP contribution",color="#243B53"); ax.tick_params(axis="x",colors="#526579"); ax.tick_params(axis="y",colors="#243B53"); ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False); ax.spines["left"].set_color("#D6E0E9"); ax.spines["bottom"].set_color("#D6E0E9"); fig.tight_layout()
             st.pyplot(fig,use_container_width=True); plt.close(fig)
             st.markdown('<div class="section-sub">SHAP describes model behavior, not medical causation.</div></div>',unsafe_allow_html=True)
         st.markdown('<div class="section-title">Disease Insights</div><div class="section-sub">Information from the existing MEDIQ knowledge base.</div>',unsafe_allow_html=True)
