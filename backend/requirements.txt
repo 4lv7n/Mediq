@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+joblib
+xgboost
+scikit-learn
+shap
+openpyxl
+google-genai
